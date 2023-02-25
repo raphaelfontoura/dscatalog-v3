@@ -3,6 +3,10 @@ package com.github.raphaelfontoura.dscatalog.resources;
 import com.github.raphaelfontoura.dscatalog.dto.CategoryDTO;
 import com.github.raphaelfontoura.dscatalog.services.CategoryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -18,8 +22,10 @@ public class CategoryResource {
     private final CategoryService service;
 
     @GetMapping
-    public ResponseEntity<List<CategoryDTO>> findAll() {
-        return ResponseEntity.ok(service.findAll());
+    public ResponseEntity<Page<CategoryDTO>> findAll(
+            @PageableDefault(value = 12, direction = Sort.Direction.ASC, sort = "name") Pageable pageable
+    ) { // {server address}/categories?size=12&page=0&sort=name,asc
+        return ResponseEntity.ok(service.findAll(pageable));
     }
 
     @GetMapping(value = "/{id}")
