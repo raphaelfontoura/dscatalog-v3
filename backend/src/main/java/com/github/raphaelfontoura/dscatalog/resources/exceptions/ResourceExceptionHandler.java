@@ -1,6 +1,6 @@
 package com.github.raphaelfontoura.dscatalog.resources.exceptions;
 
-import com.github.raphaelfontoura.dscatalog.services.exceptions.EntityNotFoundException;
+import com.github.raphaelfontoura.dscatalog.services.exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -12,8 +12,8 @@ import java.time.Instant;
 @ControllerAdvice
 public class ResourceExceptionHandler {
 
-    @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<StandardError> entityNotFound(EntityNotFoundException e, HttpServletRequest req) {
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<StandardError> entityNotFound(ResourceNotFoundException e, HttpServletRequest req) {
         StandardError err = StandardError.builder()
                 .timestamp(Instant.now())
                 .status(HttpStatus.NOT_FOUND.value())
