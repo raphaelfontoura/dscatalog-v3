@@ -3,8 +3,11 @@ package com.github.raphaelfontoura.dscatalog.services;
 import com.github.raphaelfontoura.dscatalog.dto.CategoryDTO;
 import com.github.raphaelfontoura.dscatalog.entities.Category;
 import com.github.raphaelfontoura.dscatalog.repositories.CategoryRepository;
+import com.github.raphaelfontoura.dscatalog.services.exceptions.DatabaseException;
 import com.github.raphaelfontoura.dscatalog.services.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,7 +50,17 @@ public class CategoryService {
             entity = repository.save(entity);
             return new CategoryDTO(entity);
         } catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException("Categoria não localizada");
+            throw new ResourceNotFoundException("Categoria não localizada. Id: " + id);
+        }
+    }
+
+    public void delete(Long id) {
+        try {
+            repository.deleteById(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new ResourceNotFoundException("Categoria não localizada. Id: " + id);
+        } catch (DataIntegrityViolationException e) {
+            throw new DatabaseException("Erro ao deleter registro do banco");
         }
     }
 }
