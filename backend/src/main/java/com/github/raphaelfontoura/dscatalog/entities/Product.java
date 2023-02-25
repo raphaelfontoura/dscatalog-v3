@@ -12,6 +12,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Getter @Setter
 @EqualsAndHashCode(of = {"id"})
+@Builder
 @Entity
 @Table(name = "tb_product")
 public class Product implements Serializable {

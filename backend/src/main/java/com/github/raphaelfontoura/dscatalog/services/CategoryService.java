@@ -62,7 +62,7 @@ public class CategoryService {
         } catch (EmptyResultDataAccessException e) {
             throw new ResourceNotFoundException("Categoria não localizada. Id: " + id);
         } catch (DataIntegrityViolationException e) {
-            throw new DatabaseException("Erro ao deleter registro do banco");
+            throw new DatabaseException("Erro ao deletar registro do banco");
         }
     }
 }
