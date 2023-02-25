@@ -9,6 +9,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Getter @Setter
 @EqualsAndHashCode(of = {"id"})
+@Builder
 @Entity
 @Table(name = "tb_category")
 public class Category implements Serializable {

@@ -28,4 +28,13 @@ public class CategoryService {
         Category category = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Categoria não encontrada."));
         return new CategoryDTO(category);
     }
+
+    @Transactional
+    public CategoryDTO insert(CategoryDTO dto) {
+        Category entity = Category.builder()
+                .name(dto.getName())
+                .build();
+        entity = repository.save(entity);
+        return new CategoryDTO(entity);
+    }
 }
