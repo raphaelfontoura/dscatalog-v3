@@ -1,24 +1,20 @@
 package com.github.raphaelfontoura.dscatalog.services;
 
 import com.github.raphaelfontoura.dscatalog.dto.ProductDTO;
-import com.github.raphaelfontoura.dscatalog.entities.Category;
 import com.github.raphaelfontoura.dscatalog.entities.Product;
 import com.github.raphaelfontoura.dscatalog.repositories.CategoryRepository;
 import com.github.raphaelfontoura.dscatalog.repositories.ProductRepository;
 import com.github.raphaelfontoura.dscatalog.services.exceptions.DatabaseException;
 import com.github.raphaelfontoura.dscatalog.services.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.util.BeanDefinitionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
-import java.time.Instant;
 
 @Service
 @RequiredArgsConstructor
