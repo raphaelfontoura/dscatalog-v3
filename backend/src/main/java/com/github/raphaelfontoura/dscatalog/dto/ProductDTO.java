@@ -7,6 +7,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.PastOrPresent;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
@@ -17,10 +21,15 @@ import java.util.Set;
 @Getter @Setter
 public class ProductDTO implements Serializable {
     private Long id;
+    @Size(min = 3, max = 60, message = "Deve ter entre 3 e 60 caracteres")
+    @NotBlank(message = "Campo requerido")
     private String name;
+    @NotBlank(message = "Campo requerido")
     private String description;
+    @Positive(message = "Valor deve ser um número positivo")
     private Double price;
     private String imgUrl;
+    @PastOrPresent(message = "A data do produto não pode ser futura")
     private Instant date;
     private final Set<CategoryDTO> categories = new HashSet<>();
 

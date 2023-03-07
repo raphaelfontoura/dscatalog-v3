@@ -4,6 +4,7 @@ import com.github.raphaelfontoura.dscatalog.services.exceptions.DatabaseExceptio
 import com.github.raphaelfontoura.dscatalog.services.exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -36,5 +37,18 @@ public class ResourceExceptionHandler {
                 .path(req.getRequestURI())
                 .build();
         return ResponseEntity.badRequest().body(err);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<StandardError> validationException(MethodArgumentNotValidException e, HttpServletRequest req) {
+        HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
+        StandardError err = StandardError.builder()
+                .timestamp(Instant.now())
+                .status(status.value())
+                .error("Validation error")
+                .message(e.getMessage())
+                .path(req.getRequestURI())
+                .build();
+        return ResponseEntity.status(status).body(err);
     }
 }
