@@ -14,6 +14,9 @@ import java.time.Instant;
 @ControllerAdvice
 public class ResourceExceptionHandler {
 
+    public ResourceExceptionHandler() {
+    }
+
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<StandardError> entityNotFound(ResourceNotFoundException e, HttpServletRequest req) {
         HttpStatus status = HttpStatus.NOT_FOUND;
@@ -39,16 +42,19 @@ public class ResourceExceptionHandler {
         return ResponseEntity.badRequest().body(err);
     }
 
+    @SuppressWarnings({"all"})
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<StandardError> validationException(MethodArgumentNotValidException e, HttpServletRequest req) {
+    public ResponseEntity<ValidationError> validationException(MethodArgumentNotValidException e, HttpServletRequest req) {
         HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
-        StandardError err = StandardError.builder()
-                .timestamp(Instant.now())
-                .status(status.value())
-                .error("Validation error")
-                .message(e.getMessage())
-                .path(req.getRequestURI())
-                .build();
-        return ResponseEntity.status(status).body(err);
+        ValidationError err = new ValidationError();
+        err.setTimestamp(Instant.now());
+        err.setStatus(status.value());
+        err.setError("Validation error");
+        err.setMessage(e.getMessage());
+        err.setPath(req.getRequestURI());
+        e.getBindingResult().getFieldErrors().forEach(error -> err.addError(error.getField(), error.getDefaultMessage()));
+
+        return new ResponseEntity<>(err, status);
     }
+
 }
