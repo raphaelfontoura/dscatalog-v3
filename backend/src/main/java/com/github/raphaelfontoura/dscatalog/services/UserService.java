@@ -2,6 +2,7 @@ package com.github.raphaelfontoura.dscatalog.services;
 
 import com.github.raphaelfontoura.dscatalog.dto.UserDTO;
 import com.github.raphaelfontoura.dscatalog.dto.UserInsertDTO;
+import com.github.raphaelfontoura.dscatalog.dto.UserUpdateDTO;
 import com.github.raphaelfontoura.dscatalog.entities.Role;
 import com.github.raphaelfontoura.dscatalog.entities.User;
 import com.github.raphaelfontoura.dscatalog.repositories.RoleRepository;
@@ -50,7 +51,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserDTO update(Long id, UserDTO dto) {
+    public UserDTO update(Long id, UserUpdateDTO dto) {
         try {
             User entity = repository.getReferenceById(id);
             copyDtoToEntity(dto, entity);

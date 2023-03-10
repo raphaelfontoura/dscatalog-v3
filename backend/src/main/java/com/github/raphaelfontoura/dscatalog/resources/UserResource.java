@@ -2,6 +2,7 @@ package com.github.raphaelfontoura.dscatalog.resources;
 
 import com.github.raphaelfontoura.dscatalog.dto.UserDTO;
 import com.github.raphaelfontoura.dscatalog.dto.UserInsertDTO;
+import com.github.raphaelfontoura.dscatalog.dto.UserUpdateDTO;
 import com.github.raphaelfontoura.dscatalog.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -44,7 +45,7 @@ public class UserResource {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserDTO> update(@PathVariable Long id, @Valid @RequestBody UserDTO dto) {
+    public ResponseEntity<UserDTO> update(@PathVariable Long id, @Valid @RequestBody UserUpdateDTO dto) {
         return ResponseEntity.ok(service.update(id, dto));
     }
 
