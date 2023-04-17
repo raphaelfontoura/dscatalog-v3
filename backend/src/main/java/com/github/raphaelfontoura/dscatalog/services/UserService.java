@@ -10,11 +10,16 @@ import com.github.raphaelfontoura.dscatalog.repositories.UserRepository;
 import com.github.raphaelfontoura.dscatalog.services.exceptions.DatabaseException;
 import com.github.raphaelfontoura.dscatalog.services.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,8 +28,9 @@ import javax.persistence.EntityNotFoundException;
 
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class UserService implements UserDetailsService {
 
+    private static Logger logger = LoggerFactory.getLogger(UserService.class);
     private final UserRepository repository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
@@ -82,6 +88,14 @@ public class UserService {
         dto.getRoles().forEach(roleDto -> {
             Role role = roleRepository.getReferenceById(roleDto.getId());
             entity.getRoles().add(role);
+        });
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return repository.findByEmail(username).orElseThrow(() -> {
+            logger.error("User not found:" + username);
+            return new UsernameNotFoundException("Username not found");
         });
     }
 }
