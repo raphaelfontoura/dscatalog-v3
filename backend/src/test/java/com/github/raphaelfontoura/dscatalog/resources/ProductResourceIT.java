@@ -3,6 +3,7 @@ package com.github.raphaelfontoura.dscatalog.resources;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.raphaelfontoura.dscatalog.dto.ProductDTO;
 import com.github.raphaelfontoura.dscatalog.fixture.ProductFixture;
+import com.github.raphaelfontoura.dscatalog.util.AuthTokenUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,9 @@ public class ProductResourceIT {
 
     @Autowired
     private ObjectMapper mapper;
+
+    @Autowired
+    private AuthTokenUtil tokenUtil;
 
     private Long existingId;
     private Long nonExistingId;
@@ -58,11 +62,13 @@ public class ProductResourceIT {
         String jsonBody = mapper.writeValueAsString(productDTO);
         String expectedName = productDTO.getName();
         String expectedDescription = productDTO.getDescription();
+        String token = "Bearer " + tokenUtil.obtainAccessToken("maria@gmail.com", "123456", mockMvc);
 
         mockMvc.perform(put("/products/{id}", existingId)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(jsonBody))
+                        .content(jsonBody)
+                        .header("Authorization", token))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(existingId))
                 .andExpect(jsonPath("$.name").value(expectedName))
@@ -73,11 +79,13 @@ public class ProductResourceIT {
     void updateShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
         ProductDTO productDTO = ProductFixture.createProductDTO();
         String jsonBody = mapper.writeValueAsString(productDTO);
+        String token = "Bearer " + tokenUtil.obtainAccessToken("maria@gmail.com", "123456", mockMvc);
 
         mockMvc.perform(put("/products/{id}", nonExistingId)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(jsonBody))
+                        .content(jsonBody)
+                        .header("Authorization", token))
                 .andExpect(status().isNotFound());
     }
 }
