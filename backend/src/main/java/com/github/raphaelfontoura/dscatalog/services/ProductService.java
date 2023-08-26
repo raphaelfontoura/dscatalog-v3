@@ -12,6 +12,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
@@ -56,12 +57,11 @@ public class ProductService {
         }
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.SUPPORTS)
     public void deleteProduct(Long id) {
+        if (!repository.existsById(id)) throw new ResourceNotFoundException("Produto não encontrado");
         try {
             repository.deleteById(id);
-        } catch (EmptyResultDataAccessException e) {
-            throw new ResourceNotFoundException("Produto não localizada. Id: " + id);
         } catch (DataIntegrityViolationException e) {
             throw new DatabaseException("Erro ao deletar registro do banco");
         }
